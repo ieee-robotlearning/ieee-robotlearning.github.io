@@ -7,8 +7,7 @@ This site is built so most updates do not require editing HTML or Astro componen
 For simple updates, edit Markdown files in GitHub:
 
 - People: `src/content/people`
-- Events: `src/content/events`
-- News: `src/content/news`
+- Announcements: `src/content/announcements`
 - Resources: `src/content/resources`
 
 Each file starts with frontmatter between `---` lines. That frontmatter controls the cards and listings on the site.
@@ -25,6 +24,8 @@ country: "USA"
 email: "jane@example.edu"
 group: "student"
 order: 4
+image: "/images/people/jane-doe.jpg"
+imagePosition: "50% 35%"
 ---
 
 Optional notes can go here.
@@ -50,26 +51,35 @@ Use one of these groups:
 
 The `order` number controls display order within the group.
 
-### Add an Event
+Profile images are optional. Put image files in `public/images/people`, then add an `image` field that starts with `/images/people/...`. Use `imagePosition` only when the face needs different crop framing.
 
-Create a file in `src/content/events`.
+### Add an Announcement
 
-Use `href` for registration pages, Google Slides, workshop pages, or calendar links.
+Create a file in `src/content/announcements`.
 
-### Update the ICRA 2026 Welcome Kit
+Use `date` for the date of the activity, event, or deadline the announcement is about. Use `postDate` only when you want to show when it was posted.
 
-Replace this placeholder wherever it appears:
+Markdown links work in the body:
 
-```text
-https://docs.google.com/presentation/d/REPLACE_WITH_ICRA_2026_WELCOME_KIT_ID/edit
+```md
+Please [register here](https://example.com).
 ```
 
-Files currently using it:
+### Update the TCRL@ICRA Page
 
-- `src/content/events/icra-meetup.md`
-- `src/content/resources/icra-2026-welcome-kit.md`
+The page layout is:
 
-The homepage button reads from the resource file, so updating the resource link updates the homepage CTA too.
+```text
+src/pages/tcrl-icra.astro
+```
+
+The detailed program data is:
+
+```text
+src/data/icraProgram.ts
+```
+
+The original Google Slides link is also referenced from the TCRL@ICRA page and announcements.
 
 ## Local Preview
 

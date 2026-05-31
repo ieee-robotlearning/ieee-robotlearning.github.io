@@ -1,25 +1,16 @@
 import { defineCollection, z } from 'astro:content';
 
-const news = defineCollection({
+const announcements = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
     description: z.string(),
     date: z.date(),
+    endDate: z.date().optional(),
+    postDate: z.date().optional(),
+    type: z.string().default('Announcement'),
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
-  }),
-});
-
-const events = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.date(),
-    location: z.string(),
-    type: z.string(),
-    href: z.string().url().optional(),
   }),
 });
 
@@ -35,6 +26,11 @@ const people = defineCollection({
     group: z.enum(['chair', 'junior', 'student']),
     order: z.number().default(999),
     href: z.string().url().optional(),
+    image: z.string().optional(),
+    imagePosition: z.string().optional(),
+    imageScale: z.number().optional(),
+    imageOffsetX: z.string().optional(),
+    imageOffsetY: z.string().optional(),
   }),
 });
 
@@ -48,4 +44,4 @@ const resources = defineCollection({
   }),
 });
 
-export const collections = { news, events, people, resources };
+export const collections = { announcements, people, resources };

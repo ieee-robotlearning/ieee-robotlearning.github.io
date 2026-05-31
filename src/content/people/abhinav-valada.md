@@ -6,7 +6,8 @@ location: "Freiburg im Breisgau"
 country: "Germany"
 email: "valada@cs.uni-freiburg.de"
 group: "chair"
-order: 5
+order: 3
+image: "/images/people/abhinav-valada.jpg"
 ---
 
 Committee chair entry.

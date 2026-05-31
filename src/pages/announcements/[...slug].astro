@@ -1,0 +1,121 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const announcements = await getCollection('announcements');
+  return announcements.map((announcement) => ({
+    params: { slug: announcement.id.replace(/\.(md|mdx)$/, '') },
+    props: { announcement },
+  }));
+}
+
+const { announcement } = Astro.props;
+const { Content } = await render(announcement);
+const base = import.meta.env.BASE_URL;
+const withBase = (path = '') => `${base.replace(/\/?$/, '/')}${path.replace(/^\//, '')}`;
+const formatDate = (date: Date) => date.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const formatRange = (start: Date, end?: Date) => {
+  if (!end) return formatDate(start);
+  const sameMonth = start.getUTCMonth() === end.getUTCMonth() && start.getUTCFullYear() === end.getUTCFullYear();
+  if (sameMonth) {
+    return `${start.toLocaleDateString('en', { month: 'long', timeZone: 'UTC' })} ${start.getUTCDate()}-${end.getUTCDate()}, ${end.getUTCFullYear()}`;
+  }
+  return `${formatDate(start)}-${formatDate(end)}`;
+};
+---
+
+<BaseLayout title={announcement.data.title} description={announcement.data.description}>
+  <article class="article">
+    <div class="container article-inner">
+      <a class="back" href={withBase('/announcements/')}>Announcements</a>
+      <p class="eyebrow">{announcement.data.type}</p>
+      <h1>{announcement.data.title}</h1>
+      <p class="date-line">{formatRange(announcement.data.date, announcement.data.endDate)}</p>
+      {announcement.data.postDate && <p class="post-date">Posted {formatDate(announcement.data.postDate)}</p>}
+      <p class="dek">{announcement.data.description}</p>
+      <div class="content">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    padding: 6rem 0;
+  }
+
+  .article-inner {
+    max-width: 850px;
+  }
+
+  .back {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5rem 0.75rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 780;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    margin: 0.7rem 0 0.8rem;
+    font-size: clamp(2.6rem, 6vw, 5.3rem);
+    line-height: 0.95;
+  }
+
+  .date-line,
+  .post-date,
+  .dek {
+    margin: 0;
+  }
+
+  .date-line {
+    color: var(--accent-strong);
+    font-size: 1rem;
+    font-weight: 900;
+  }
+
+  .post-date {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 760;
+    margin-top: 0.2rem;
+  }
+
+  .dek {
+    color: var(--muted);
+    font-size: 1.18rem;
+    line-height: 1.65;
+    margin-top: 1rem;
+  }
+
+  .content {
+    border-top: 1px solid var(--line);
+    margin-top: 2.2rem;
+    padding-top: 2rem;
+    color: #23303a;
+    line-height: 1.75;
+  }
+
+  .content :global(h2) {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .content :global(ul) {
+    display: grid;
+    gap: 0.45rem;
+    list-style: disc;
+    padding-left: 1.3rem;
+  }
+
+  .content :global(a) {
+    color: var(--accent-strong);
+    font-weight: 780;
+    text-decoration: underline;
+  }
+</style>

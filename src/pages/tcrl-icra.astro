@@ -1,0 +1,471 @@
+---
+import { ArrowRight, CalendarDays, MapPin, UsersRound } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { icraProgram } from '../data/icraProgram';
+import type { IcraProgramSession } from '../data/icraProgram';
+
+const slideDeckUrl =
+  'https://docs.google.com/presentation/d/13qj8I7IA9f1WYuN1YnD_bT7fmGQuylSLi4zCBDb90DA/edit?slide=id.g3e3ecd9b9c2_1_0#slide=id.g3e3ecd9b9c2_1_0';
+const icraUrl = 'https://2026.ieee-icra.org/';
+const venueUrl = 'https://2026.ieee-icra.org/venue/viecon-vienna-congress-convention-center/';
+const socialRegistrationUrl = 'https://lnkd.in/g95362Ch';
+const base = import.meta.env.BASE_URL;
+const withBase = (path = '') => `${base.replace(/\/?$/, '/')}${path.replace(/^\//, '')}`;
+const countEntries = (sessions: IcraProgramSession[]) =>
+  sessions.reduce((total, session) => total + session.entries.length, 0);
+const entryLabel = (count: number) => `${count} ${count === 1 ? 'entry' : 'entries'}`;
+const sessionMeta = (session: IcraProgramSession) => [session.time, session.location].filter(Boolean).join(' | ');
+---
+
+<BaseLayout title="TCRL@ICRA 2026" description="A guide for anyone interested in robot learning at ICRA 2026 in Vienna.">
+  <section class="icra-hero dark-panel mesh">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">ICRA 2026 · Vienna</p>
+        <h1>TCRL@ICRA</h1>
+        <p>
+          A guide for anyone interested in robot learning at ICRA 2026.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href={slideDeckUrl}>Google Slides welcome kit <ArrowRight size={18} /></a>
+          <a class="button button-secondary" href={icraUrl}>ICRA 2026 website</a>
+        </div>
+      </div>
+      <aside class="quick-card">
+        <div>
+          <CalendarDays size={22} aria-hidden="true" />
+          <span><small>Conference</small>June 1-5, 2026</span>
+        </div>
+        <div>
+          <MapPin size={22} aria-hidden="true" />
+          <span><small>Venue</small>VIECON, Vienna</span>
+        </div>
+        <div class="quick-social">
+          <UsersRound size={22} aria-hidden="true" />
+          <span><small>TC Social</small>June 4, 19:00-22:00</span>
+          <a href={socialRegistrationUrl}>Register <ArrowRight size={15} /></a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="venue-section">
+    <div class="container venue-grid">
+      <article class="card info-card visual-card">
+        <h2>Conference Venue</h2>
+        <p>
+          VIECON - Vienna Congress & Convention Center<br />
+          Messeplatz 1, 1020 Vienna, Austria
+        </p>
+        <a href={venueUrl}>Official ICRA venue page <ArrowRight size={16} /></a>
+        <img
+          src={withBase('/images/icra/conference-venue.png')}
+          alt="Map and entrance orientation for VIECON, the Vienna Congress and Convention Center."
+          loading="lazy"
+          decoding="async"
+        />
+      </article>
+      <article class="card info-card visual-card">
+        <h2>Floor Plan Orientation</h2>
+        <img
+          src={withBase('/images/icra/floor-plan.png')}
+          alt="ICRA 2026 venue floor plan showing Foyer A, Hall A, Hall B, Hall C, and Hall D."
+          loading="lazy"
+          decoding="async"
+        />
+      </article>
+    </div>
+  </section>
+
+  <section class="program-section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Program"
+        title="Day-by-day robot learning guide."
+        copy="Detailed robot-learning sessions and related TC activity from the welcome kit."
+      />
+      <div class="day-list">
+        {icraProgram.map((day) => (
+          <details class="day-card card">
+            <summary class="day-summary">
+              <span class="day-title">
+                <span class="eyebrow">{day.date}</span>
+                <span>{day.day}</span>
+              </span>
+              <span class="day-copy">{day.summary}</span>
+            </summary>
+            <div class="day-body">
+              {day.groups.map((group) => (
+                <details class="group-detail">
+                  <summary class="group-summary">
+                    <span>{group.title}</span>
+                    <small>{entryLabel(countEntries(group.sessions))}</small>
+                  </summary>
+                  {group.sessions.length === 1 ? (
+                    <ul class="program-items single-session-items">
+                      {group.sessions[0]?.entries.map((entry) => (
+                        <li>
+                          <div class="entry-meta">
+                            {entry.time && <span>{entry.time}</span>}
+                            {entry.location && <span>{entry.location}</span>}
+                          </div>
+                          <p>{entry.title}</p>
+                          {entry.note && <p class="entry-note">{entry.note}</p>}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div class="session-list">
+                      {group.sessions.map((session) => (
+                        <details class="session-detail">
+                          <summary class="session-summary">
+                            <span>{session.title}</span>
+                            {sessionMeta(session) && <small>{sessionMeta(session)}</small>}
+                          </summary>
+                          <ul class="program-items">
+                            {session.entries.map((entry) => (
+                              <li>
+                                <div class="entry-meta">
+                                  {entry.time && <span>{entry.time}</span>}
+                                  {entry.location && <span>{entry.location}</span>}
+                                </div>
+                                <p>{entry.title}</p>
+                                {entry.note && <p class="entry-note">{entry.note}</p>}
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      ))}
+                    </div>
+                  )}
+                </details>
+              ))}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .icra-hero {
+    padding: 6.5rem 0 5rem;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr minmax(280px, 0.45fr);
+    gap: 2rem;
+    align-items: end;
+  }
+
+  h1 {
+    max-width: 900px;
+    margin: 0.7rem 0 1rem;
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 0.88;
+  }
+
+  .icra-hero p:not(.eyebrow) {
+    max-width: 740px;
+    color: #cfe0e7;
+    font-size: 1.18rem;
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.8rem;
+  }
+
+  .quick-card {
+    display: grid;
+    gap: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 1rem;
+  }
+
+  .quick-card div {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: center;
+    color: #e7f5f8;
+    font-weight: 800;
+  }
+
+  .quick-card small {
+    display: block;
+    color: #8ee8f4;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.1;
+    margin-bottom: 0.18rem;
+    text-transform: uppercase;
+  }
+
+  .quick-social {
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    padding-top: 0.8rem;
+  }
+
+  .quick-social a {
+    grid-column: 2;
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.32rem;
+    color: #ffd0a6;
+    font-size: 0.88rem;
+    font-weight: 900;
+  }
+
+  .venue-section,
+  .program-section {
+    padding: 5rem 0;
+  }
+
+  .venue-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .info-card {
+    padding: 1.2rem;
+  }
+
+  .visual-card a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--accent-strong);
+    font-weight: 850;
+    margin: 0.6rem 0 1rem;
+  }
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  .info-card h2,
+  .visual-card h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .visual-card img {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+  }
+
+  .info-card p {
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .day-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .day-card {
+    overflow: hidden;
+    padding: 0;
+  }
+
+  details > summary {
+    list-style: none;
+  }
+
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .day-summary,
+  .group-summary,
+  .session-summary {
+    align-items: center;
+    cursor: pointer;
+    display: grid;
+    gap: 0.8rem;
+    color: #17222c;
+    font-weight: 900;
+  }
+
+  .day-summary::before,
+  .group-summary::before,
+  .session-summary::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 7px solid currentColor;
+    transform-origin: 50% 50%;
+    transition: transform 160ms ease;
+  }
+
+  .day-card[open] > .day-summary::before,
+  .group-detail[open] > .group-summary::before,
+  .session-detail[open] > .session-summary::before {
+    transform: rotate(90deg);
+  }
+
+  .day-summary {
+    grid-template-columns: auto minmax(260px, 0.34fr) minmax(0, 1fr);
+    padding: clamp(1rem, 2vw, 1.4rem);
+  }
+
+  .day-title {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .day-title > span:last-child {
+    font-size: clamp(1.8rem, 3.3vw, 2.75rem);
+    line-height: 0.95;
+  }
+
+  .day-copy {
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1.6;
+    min-width: 0;
+  }
+
+  .day-body {
+    display: grid;
+    gap: 0.75rem;
+    border-top: 1px solid var(--line);
+    padding: clamp(1rem, 2vw, 1.4rem);
+  }
+
+  .group-detail,
+  .session-detail {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .group-detail {
+    background: #f7fbfc;
+  }
+
+  .group-summary,
+  .session-summary {
+    grid-template-columns: auto 1fr auto;
+    padding: 0.9rem 1rem;
+  }
+
+  .group-summary small,
+  .session-summary small {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .session-list {
+    display: grid;
+    gap: 0.65rem;
+    border-top: 1px solid var(--line);
+    padding: 0.75rem;
+  }
+
+  .session-detail {
+    background: #fff;
+  }
+
+  .program-items {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .single-session-items {
+    border-top: 1px solid var(--line);
+  }
+
+  .program-items li {
+    display: grid;
+    gap: 0.35rem;
+    border-top: 1px solid var(--line);
+    padding: 0.85rem 1rem;
+  }
+
+  .program-items li:first-child {
+    border-top: 0;
+  }
+
+  .entry-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .entry-meta span {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--accent-strong);
+    font-size: 0.76rem;
+    font-weight: 900;
+    line-height: 1;
+    padding: 0.32rem 0.48rem;
+  }
+
+  .program-items p {
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .program-items p:first-of-type {
+    color: #17222c;
+    font-weight: 780;
+  }
+
+  .entry-note {
+    font-size: 0.94rem;
+  }
+
+  @media (max-width: 860px) {
+    .hero-grid,
+    .venue-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .day-summary {
+      grid-template-columns: auto 1fr;
+    }
+
+    .day-copy {
+      grid-column: 2;
+    }
+
+    .group-summary,
+    .session-summary {
+      grid-template-columns: auto 1fr;
+    }
+
+    .group-summary small,
+    .session-summary small {
+      grid-column: 2;
+    }
+  }
+</style>

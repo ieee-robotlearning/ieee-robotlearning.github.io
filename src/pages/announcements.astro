@@ -1,0 +1,118 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const announcements = (await getCollection('announcements')).sort((a, b) => {
+  return a.data.date.valueOf() - b.data.date.valueOf();
+});
+
+const base = import.meta.env.BASE_URL;
+const withBase = (path = '') => `${base.replace(/\/?$/, '/')}${path.replace(/^\//, '')}`;
+const getSlug = (id: string) => id.replace(/\.(md|mdx)$/, '');
+const formatDate = (date: Date) => date.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const formatRange = (start: Date, end?: Date) => {
+  if (!end) return formatDate(start);
+  const sameMonth = start.getUTCMonth() === end.getUTCMonth() && start.getUTCFullYear() === end.getUTCFullYear();
+  if (sameMonth) {
+    return `${start.toLocaleDateString('en', { month: 'long', timeZone: 'UTC' })} ${start.getUTCDate()}-${end.getUTCDate()}, ${end.getUTCFullYear()}`;
+  }
+  return `${formatDate(start)}-${formatDate(end)}`;
+};
+---
+
+<BaseLayout title="Announcements" description="Time-sensitive announcements and dated committee activity from the IEEE RAS TC on Robot Learning.">
+  <section class="page-intro">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Announcements"
+        title="Dated updates from the Robot Learning TC."
+        copy="Announcements are organized by the date of the activity, deadline, or event they refer to. Posting dates are shown only when useful."
+      />
+    </div>
+  </section>
+  <section class="announcements-section">
+    <div class="container announcements-list">
+      {announcements.map((item) => (
+        <a class="announcement-card card" href={withBase(`/announcements/${getSlug(item.id)}/`)}>
+          <div>
+            <p class="date">{formatRange(item.data.date, item.data.endDate)}</p>
+            {item.data.postDate && <p class="post-date">Posted {formatDate(item.data.postDate)}</p>}
+          </div>
+          <div>
+            <span>{item.data.type}</span>
+            <h2>{item.data.title}</h2>
+            <p>{item.data.description}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-intro {
+    padding: 6rem 0 3rem;
+  }
+
+  .announcements-section {
+    padding: 1rem 0 6rem;
+  }
+
+  .announcements-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .announcement-card {
+    display: grid;
+    grid-template-columns: minmax(190px, 0.28fr) 1fr;
+    gap: 1.2rem;
+    padding: 1.15rem;
+  }
+
+  .date,
+  .post-date,
+  h2,
+  p {
+    margin: 0;
+  }
+
+  .date {
+    color: var(--accent-strong);
+    font-weight: 900;
+    line-height: 1.2;
+  }
+
+  .post-date {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 760;
+    margin-top: 0.32rem;
+  }
+
+  span {
+    color: var(--signal);
+    font-size: 0.78rem;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
+    line-height: 1.08;
+    margin-top: 0.35rem;
+  }
+
+  .announcement-card p:not(.date):not(.post-date) {
+    color: var(--muted);
+    line-height: 1.62;
+    margin-top: 0.55rem;
+  }
+
+  @media (max-width: 720px) {
+    .announcement-card {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

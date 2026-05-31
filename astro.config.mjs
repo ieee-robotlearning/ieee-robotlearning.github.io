@@ -4,8 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: "https://moritz-zoellner.github.io",
-  base: "/tcrl-website",
+  site: 'https://ieee-robotlearning.github.io',
   integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

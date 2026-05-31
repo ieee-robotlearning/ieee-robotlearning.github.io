@@ -8,13 +8,13 @@ const resources = await getCollection('resources');
 const categories = [...new Set(resources.map((resource) => resource.data.category))];
 ---
 
-<BaseLayout title="Resources" description="Datasets, tutorials, reading lists, and community links for robot learning.">
+<BaseLayout title="Resources" description="Community resources and links for the IEEE RAS TC on Robot Learning.">
   <section class="page-intro">
     <div class="container">
       <SectionHeading
         eyebrow="Resources"
         title="Resources for the robot learning community."
-        copy="This page will collect tutorials, datasets, benchmarks, reading lists, software, lab links, and committee materials."
+        copy="Current public links maintained by the IEEE RAS Technical Committee on Robot Learning."
       />
     </div>
   </section>

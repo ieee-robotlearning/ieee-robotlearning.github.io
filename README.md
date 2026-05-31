@@ -6,7 +6,7 @@ Static website scaffold for the IEEE RAS Technical Committee on Robot Learning.
 
 - Astro
 - Tailwind through the Tailwind Vite plugin
-- Markdown content collections for news, events, people, and resources
+- Markdown content collections for announcements, people, and resources
 - GitHub Pages deployment through GitHub Actions
 
 ## Local Development
@@ -18,8 +18,7 @@ npm run dev
 
 ## Content Editing
 
-- News posts: `src/content/news`
-- Events: `src/content/events`
+- Announcements: `src/content/announcements`
 - People: `src/content/people`
 - Resources: `src/content/resources`
 
@@ -34,4 +33,4 @@ Team-facing guides:
 
 The workflow in `.github/workflows/deploy.yml` builds the site and publishes `dist` to GitHub Pages when changes land on `main`.
 
-For the final organization URL, use an organization named `robot-learning` with a repository named `robot-learning.github.io`, then enable GitHub Pages with GitHub Actions as the source.
+This repository is configured for the organization site at `https://ieee-robotlearning.github.io/`. In GitHub Pages settings, use GitHub Actions as the source.

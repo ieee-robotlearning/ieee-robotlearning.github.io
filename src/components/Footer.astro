@@ -2,6 +2,7 @@
 const year = new Date().getFullYear();
 const base = import.meta.env.BASE_URL;
 const withBase = (path = '') => `${base.replace(/\/?$/, '/')}${path.replace(/^\//, '')}`;
+const linkedInUrl = 'https://www.linkedin.com/company/ieee-ras-robotlearning/';
 ---
 
 <footer class="footer">
@@ -13,14 +14,16 @@ const withBase = (path = '') => `${base.replace(/\/?$/, '/')}${path.replace(/^\/
       <p class="eyebrow">IEEE RAS Technical Committee</p>
       <h2>Robot Learning</h2>
       <p>
-        Community infrastructure for learning-enabled robotics: events, resources,
-        mentoring, and coordination across research areas.
+        Community infrastructure for learning-enabled robotics: announcements,
+        resources, mentoring, and coordination across research areas.
       </p>
     </div>
     <div class="footer-links">
       <a href={withBase('/join/')}>Contact</a>
+      <a href={withBase('/announcements/')}>Announcements</a>
+      <a href={withBase('/tcrl-icra/')}>TCRL@ICRA</a>
       <a href={withBase('/resources/')}>Resources</a>
-      <a href={withBase('/news/')}>News</a>
+      <a href={linkedInUrl} rel="noreferrer">LinkedIn</a>
       <a href="https://www.ieee-ras.org/" rel="noreferrer">IEEE RAS</a>
     </div>
   </div>

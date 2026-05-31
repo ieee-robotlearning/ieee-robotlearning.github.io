@@ -18,14 +18,20 @@ import {
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 
-const news = (await getCollection('news'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+const announcements = (await getCollection('announcements'))
+  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf())
   .slice(0, 3);
 
-const allResources = await getCollection('resources');
-const welcomeKit = allResources.find((resource) => resource.id.replace(/\.(md|mdx)$/, '') === 'icra-2026-welcome-kit');
 const getSlug = (id: string) => id.replace(/\.(md|mdx)$/, '');
 const formatDate = (date: Date) => date.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const formatRange = (start: Date, end?: Date) => {
+  if (!end) return formatDate(start);
+  const sameMonth = start.getUTCMonth() === end.getUTCMonth() && start.getUTCFullYear() === end.getUTCFullYear();
+  if (sameMonth) {
+    return `${start.toLocaleDateString('en', { month: 'long', timeZone: 'UTC' })} ${start.getUTCDate()}-${end.getUTCDate()}, ${end.getUTCFullYear()}`;
+  }
+  return `${formatDate(start)}-${formatDate(end)}`;
+};
 const base = import.meta.env.BASE_URL;
 const withBase = (path = '') => `${base.replace(/\/?$/, '/')}${path.replace(/^\//, '')}`;
 
@@ -75,9 +81,14 @@ const researchAreas = [
         A home for researchers building robots that learn from data, humans,
         simulation, interaction, and deployment.
       </p>
+      <a class="hero-alert" href={withBase('/tcrl-icra/')}>
+        <span>ICRA 2026</span>
+        <strong>TCRL@ICRA welcome kit</strong>
+        <ArrowRight size={18} aria-hidden="true" />
+      </a>
       <div class="hero-actions">
         <a class="button button-primary" href={withBase('/join/')}>Join the TC <ArrowRight size={18} /></a>
-        <a class="button button-secondary" href={welcomeKit?.data.href ?? withBase('/resources/')}>ICRA 2026 Welcome Kit</a>
+        <a class="button button-secondary" href={withBase('/announcements/')}>Announcements</a>
       </div>
     </div>
   </section>
@@ -144,11 +155,11 @@ const researchAreas = [
   <section class="featured-section">
     <div class="container featured-grid">
       <div>
-        <SectionHeading eyebrow="Latest News" title="Recent updates." />
-        <div class="news-list">
-          {news.map((post) => (
-            <a class="news-card card" href={withBase(`/news/${getSlug(post.id)}/`)}>
-              <span>{formatDate(post.data.date)}</span>
+        <SectionHeading eyebrow="Announcements" title="Upcoming TC activity." />
+        <div class="announcement-list">
+          {announcements.map((post) => (
+            <a class="announcement-card card" href={withBase(`/announcements/${getSlug(post.id)}/`)}>
+              <span>{formatRange(post.data.date, post.data.endDate)}</span>
               <h3>{post.data.title}</h3>
               <p>{post.data.description}</p>
             </a>
@@ -158,12 +169,12 @@ const researchAreas = [
       <div class="resource-preview">
         <SectionHeading
           eyebrow="Resources Preview"
-          title="Useful material for the community."
-          copy="Find tutorials, datasets, benchmarks, reading lists, software, lab links, and committee resources."
+          title="Community links."
+          copy="Find the TC LinkedIn page and current public community links."
         />
         <div class="mini-links">
           <a href={withBase('/resources/')}>Browse resources <ArrowRight size={16} /></a>
-          <a href={withBase('/activities/')}>View activities <ArrowRight size={16} /></a>
+          <a href={withBase('/announcements/')}>View announcements <ArrowRight size={16} /></a>
         </div>
       </div>
     </div>
@@ -253,17 +264,43 @@ const researchAreas = [
     margin-top: 2rem;
   }
 
+  .hero-alert {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: fit-content;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    background: rgba(217, 94, 26, 0.2);
+    color: #fff7ef;
+    margin-top: 1.5rem;
+    padding: 0.7rem 0.9rem;
+    font-weight: 850;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  }
+
+  .hero-alert span {
+    border-radius: 999px;
+    background: #f5a15f;
+    color: #1d1209;
+    font-size: 0.75rem;
+    font-weight: 900;
+    padding: 0.24rem 0.48rem;
+    text-transform: uppercase;
+  }
+
+  .hero-alert strong {
+    font-size: 0.98rem;
+  }
+
   .mission-section,
   .research-section,
-  .featured-section,
-  .resource-section,
-  .news-section {
+  .featured-section {
     padding: 3rem 0;
   }
 
   .mission-grid,
-  .featured-grid,
-  .news-grid {
+  .featured-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
     gap: 3rem;
@@ -286,8 +323,8 @@ const researchAreas = [
   .work-card h3,
   .work-card p,
   .topic-card h3,
-  .news-card h3,
-  .news-card p,
+  .announcement-card h3,
+  .announcement-card p,
   .join-panel h2,
   .join-panel p {
     margin: 0;
@@ -300,7 +337,7 @@ const researchAreas = [
 
   .mission-card p,
   .work-card p,
-  .news-card p,
+  .announcement-card p,
   .join-panel p {
     color: var(--muted);
     line-height: 1.65;
@@ -363,8 +400,7 @@ const researchAreas = [
     line-height: 1.2;
   }
 
-  .event-list,
-  .news-list {
+  .announcement-list {
     margin-top: 1.5rem;
   }
 
@@ -390,22 +426,18 @@ const researchAreas = [
     font-weight: 850;
   }
 
-  .resource-section {
-    background: var(--panel);
-  }
-
-  .news-list {
+  .announcement-list {
     display: grid;
     gap: 0.9rem;
   }
 
-  .news-card {
+  .announcement-card {
     display: grid;
     gap: 0.45rem;
     padding: 1rem;
   }
 
-  .news-card span {
+  .announcement-card span {
     color: var(--accent-strong);
     font-size: 0.8rem;
     font-weight: 850;
@@ -450,7 +482,6 @@ const researchAreas = [
   @media (max-width: 860px) {
     .mission-grid,
     .featured-grid,
-    .news-grid,
     .join-panel {
       grid-template-columns: 1fr;
     }

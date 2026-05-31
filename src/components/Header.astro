@@ -5,8 +5,8 @@ const base = import.meta.env.BASE_URL;
 const withBase = (path = '') => `${base.replace(/\/?$/, '/')}${path.replace(/^\//, '')}`;
 
 const nav = [
-  { href: withBase('/activities/'), label: 'Activities' },
-  { href: withBase('/news/'), label: 'News' },
+  { href: withBase('/announcements/'), label: 'Announcements' },
+  { href: withBase('/tcrl-icra/'), label: 'TCRL@ICRA', highlight: true },
   { href: withBase('/resources/'), label: 'Resources' },
   { href: withBase('/people/'), label: 'People' },
   { href: withBase('/join/'), label: 'Join' },
@@ -25,14 +25,14 @@ const nav = [
       </span>
     </a>
     <nav class="nav" aria-label="Main navigation">
-      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      {nav.map((item) => <a href={item.href} class:list={[{ highlight: item.highlight }]}>{item.label}</a>)}
     </nav>
     <details class="mobile-nav">
       <summary aria-label="Open navigation">
         <Menu size={20} />
       </summary>
       <div class="mobile-menu">
-        {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+        {nav.map((item) => <a href={item.href} class:list={[{ highlight: item.highlight }]}>{item.label}</a>)}
       </div>
     </details>
   </div>
@@ -110,6 +110,21 @@ const nav = [
 
   .nav a:hover {
     border-color: var(--accent);
+  }
+
+  .nav a.highlight,
+  .mobile-menu a.highlight {
+    border-color: rgba(217, 94, 26, 0.22);
+    border-radius: 999px;
+    background: rgba(217, 94, 26, 0.12);
+    color: #8c3d0f;
+    padding-inline: 0.78rem;
+  }
+
+  .nav a.highlight:hover,
+  .mobile-menu a.highlight:hover {
+    border-color: rgba(217, 94, 26, 0.5);
+    background: rgba(217, 94, 26, 0.18);
   }
 
   .mobile-nav {
