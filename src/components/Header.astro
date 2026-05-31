@@ -16,12 +16,8 @@ const nav = [
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href={withBase('/')} aria-label="IEEE RAS TC on Robot Learning home">
-      <span class="brand-mark scale-150 mr-5" aria-hidden="true">
-        <img src={withBase('/images/tcrl-logo.svg')} alt="" class="ml-3 scale-[135%]"/>
-      </span>
-      <span>
-        <strong>Robot Learning</strong>
-        <small>IEEE RAS Technical Committee</small>
+      <span class="brand-mark" aria-hidden="true">
+        <img src={withBase('/images/tcrl-logo-long.png')} alt="" />
       </span>
     </a>
     <nav class="nav" aria-label="Main navigation">
@@ -65,33 +61,16 @@ const nav = [
 
   .brand-mark {
     display: grid;
-    width: 74px;
-    height: 46px;
+    width: 260px;
+    height: 48px;
     place-items: center;
-    border: 1px solid rgba(111, 26, 122, 0.24);
-    border-radius: 8px;
-    background: #fff;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .brand-mark img {
-    width: 66px;
-    height: 40px;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-  }
-
-  .brand strong,
-  .brand small {
-    display: block;
-  }
-
-  .brand strong {
-    font-size: 0.98rem;
-  }
-
-  .brand small {
-    color: var(--muted);
-    font-size: 0.76rem;
   }
 
   .nav {
@@ -188,6 +167,12 @@ const nav = [
 
     .mobile-nav summary {
       display: grid;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .brand-mark {
+      width: min(235px, calc(100vw - 98px));
     }
   }
 </style>

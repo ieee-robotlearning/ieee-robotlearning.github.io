@@ -8,8 +8,8 @@ group: "junior"
 order: 1
 href: "https://rafaeloliveira.me/"
 image: "/images/people/rafael-oliveira.png"
-imagePosition: "50% 50%"
-imageScale: 1
+imagePosition: "50% 55%"
+imageScale: 1.18
 imageOffsetY: "-8%"
 ---
 
