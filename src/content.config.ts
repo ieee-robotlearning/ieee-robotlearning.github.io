@@ -27,10 +27,9 @@ const people = defineCollection({
     order: z.number().default(999),
     href: z.string().url().optional(),
     image: z.string().optional(),
-    imagePosition: z.string().optional(),
     imageScale: z.number().optional(),
-    imageOffsetX: z.string().optional(),
-    imageOffsetY: z.string().optional(),
+    imageX: z.string().optional(),
+    imageY: z.string().optional(),
   }),
 });
 

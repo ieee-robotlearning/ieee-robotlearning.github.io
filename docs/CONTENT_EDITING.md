@@ -25,7 +25,9 @@ email: "jane@example.edu"
 group: "student"
 order: 4
 image: "/images/people/jane-doe.jpg"
-imagePosition: "50% 35%"
+imageScale: 1
+imageX: "0px"
+imageY: "0px"
 ---
 
 Optional notes can go here.
@@ -51,7 +53,7 @@ Use one of these groups:
 
 The `order` number controls display order within the group.
 
-Profile images are optional. Put image files in `public/images/people`, then add an `image` field that starts with `/images/people/...`. Use `imagePosition` only when the face needs different crop framing.
+Profile images are optional. Put image files in `public/images/people`, then add an `image` field that starts with `/images/people/...`. Use `imageScale`, `imageX`, and `imageY` to crop the photo inside the square avatar.
 
 ### Add an Announcement
 

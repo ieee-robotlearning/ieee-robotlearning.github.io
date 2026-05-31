@@ -7,9 +7,9 @@ email: "zoellner@purdue.edu"
 group: "student"
 order: 3
 image: "/images/people/moritz-zoellner.jpg"
-imagePosition: "50% 68%"
-imageScale: 1.18
-imageOffsetY: "-9%"
+imageScale: 1.1
+imageX: "0px"
+imageY: "3px"
 ---
 
 Student co-chair entry.

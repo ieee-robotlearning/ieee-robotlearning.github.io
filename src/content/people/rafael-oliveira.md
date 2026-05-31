@@ -8,9 +8,9 @@ group: "junior"
 order: 1
 href: "https://rafaeloliveira.me/"
 image: "/images/people/rafael-oliveira.png"
-imagePosition: "50% 55%"
-imageScale: 1.18
-imageOffsetY: "-8%"
+imageScale: 1.0
+imageX: "0px"
+imageY: "-4px"
 ---
 
 Junior co-chair entry.
