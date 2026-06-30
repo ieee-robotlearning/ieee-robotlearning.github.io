@@ -26,6 +26,8 @@ const people = defineCollection({
     group: z.enum(['chair', 'junior', 'student']),
     order: z.number().default(999),
     href: z.string().url().optional(),
+    website: z.string().url().optional(),
+    linkedin: z.string().url().optional(),
     image: z.string().optional(),
     imageScale: z.number().optional(),
     imageX: z.string().optional(),

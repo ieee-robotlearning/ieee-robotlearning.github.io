@@ -1,5 +1,6 @@
 ---
 import { existsSync } from 'node:fs';
+import { Globe } from '@lucide/astro';
 
 interface Props {
   name: string;
@@ -9,6 +10,8 @@ interface Props {
   country?: string;
   email?: string;
   href?: string;
+  website?: string;
+  linkedin?: string;
   image?: string;
   imageScale?: number;
   imageX?: string;
@@ -23,6 +26,8 @@ const {
   country,
   email,
   href,
+  website,
+  linkedin,
   image,
   imageScale = 1,
   imageX = '0px',
@@ -39,14 +44,31 @@ const imageStyle = [
   `--avatar-x: ${imageX}`,
   `--avatar-y: ${imageY}`,
 ].join('; ');
+const websiteUrl = website ?? href;
 ---
 
 <article class="person-card card">
   <div class="avatar" aria-hidden="true">
     {hasImage && image ? <img src={withBase(image)} alt="" loading="lazy" decoding="async" style={imageStyle} /> : initials}
   </div>
-  <div>
-    <h3>{href ? <a href={href}>{name}</a> : name}</h3>
+  <div class="person-info">
+    <div class="person-heading">
+      <h3>{name}</h3>
+      {(linkedin || websiteUrl) && (
+        <div class="profile-links" role="group" aria-label={`${name} profile links`}>
+          {linkedin && (
+            <a class="profile-link linkedin-link" href={linkedin} aria-label={`${name} on LinkedIn`} title="LinkedIn" rel="noreferrer">
+              <span aria-hidden="true">in</span>
+            </a>
+          )}
+          {websiteUrl && (
+            <a class="profile-link" href={websiteUrl} aria-label={`${name} website`} title="Website" rel="noreferrer">
+              <Globe size={17} aria-hidden="true" />
+            </a>
+          )}
+        </div>
+      )}
+    </div>
     <p class="role">{role}</p>
     <p>{affiliation}</p>
     {place && <p class="place">{place}</p>}
@@ -92,8 +114,59 @@ const imageStyle = [
     margin: 0;
   }
 
+  .person-info {
+    min-width: 0;
+  }
+
+  .person-heading {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
   h3 {
     font-size: 1.05rem;
+    line-height: 1.18;
+    min-width: 0;
+  }
+
+  .profile-links {
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 0.38rem;
+  }
+
+  .profile-link {
+    display: inline-grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--accent-strong);
+    transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+
+  .profile-link:hover,
+  .profile-link:focus-visible {
+    border-color: rgba(14, 159, 189, 0.45);
+    background: rgba(17, 184, 217, 0.1);
+    color: #075d70;
+    transform: translateY(-1px);
+  }
+
+  .profile-link:focus-visible {
+    outline: 3px solid rgba(14, 159, 189, 0.2);
+    outline-offset: 2px;
+  }
+
+  .linkedin-link span {
+    font-size: 0.94rem;
+    font-weight: 950;
+    letter-spacing: 0;
+    line-height: 1;
   }
 
   .role {
