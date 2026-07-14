@@ -5,7 +5,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 
 const announcements = (await getCollection('announcements')).sort((a, b) => {
-  return a.data.date.valueOf() - b.data.date.valueOf();
+  const aPublished = a.data.postDate ?? a.data.date;
+  const bPublished = b.data.postDate ?? b.data.date;
+  return bPublished.valueOf() - aPublished.valueOf()
+    || b.data.date.valueOf() - a.data.date.valueOf();
 });
 
 const base = import.meta.env.BASE_URL;

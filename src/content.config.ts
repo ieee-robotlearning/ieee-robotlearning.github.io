@@ -11,6 +11,8 @@ const announcements = defineCollection({
     type: z.string().default('Announcement'),
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
   }),
 });
 

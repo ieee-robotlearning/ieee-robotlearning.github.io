@@ -34,6 +34,13 @@ const formatRange = (start: Date, end?: Date) => {
       <p class="date-line">{formatRange(announcement.data.date, announcement.data.endDate)}</p>
       {announcement.data.postDate && <p class="post-date">Posted {formatDate(announcement.data.postDate)}</p>}
       <p class="dek">{announcement.data.description}</p>
+      {announcement.data.image && (
+        <img
+          class="announcement-image"
+          src={withBase(announcement.data.image)}
+          alt={announcement.data.imageAlt ?? ''}
+        />
+      )}
       <div class="content">
         <Content />
       </div>
@@ -93,6 +100,15 @@ const formatRange = (start: Date, end?: Date) => {
     margin-top: 1rem;
   }
 
+  .announcement-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 2.2rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+
   .content {
     border-top: 1px solid var(--line);
     margin-top: 2.2rem;
@@ -118,4 +134,5 @@ const formatRange = (start: Date, end?: Date) => {
     font-weight: 780;
     text-decoration: underline;
   }
+
 </style>
